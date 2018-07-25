@@ -1,0 +1,26 @@
+{
+  "name": "@mhy/process",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "mhy-build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wintercounter/mhy-process.git"
+  },
+  "author": "Victor Vincent",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wintercounter/mhy-process/issues"
+  },
+  "homepage": "https://github.com/wintercounter/mhy-process#readme",
+  "dependencies": {
+    "tree-kill": "^1.2.0"
+  },
+  "devDependencies": {
+    "@mhy/build": "0.0.5"
+  }
+}
