@@ -5,7 +5,7 @@ import tk from 'tree-kill'
 const _onData = Symbol()
 const instances = new Set()
 
-export default class Index extends EventEmitter {
+export default class extends EventEmitter {
 	processes = new Map()
 
 	constructor() {
@@ -14,7 +14,6 @@ export default class Index extends EventEmitter {
 	}
 
 	spawn(id, [bin, ...cmd]) {
-		bin === 'node' && cmd.push('-r') && cmd.push(require.resolve('@babel/register'))
 		const p = spawn(bin, cmd, { shell: true, stdio: process.MHY_ENV === 'ui' ? 'pipe' : 'inherit' })
 		this.processes.set(id, p)
 		p.stdout && p.stdout.on('data', this[_onData])
