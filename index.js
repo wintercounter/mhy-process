@@ -31,12 +31,14 @@ export default class extends EventEmitter {
     }
 
     [_onData] = line =>
-        (this.log(line.toString('utf8').trim())[_onError] = line =>
-            this.log(line.toString('utf8').trim(), 'error'))
+        this.log(line.toString('utf8').trim())
 
     log(d, type = 'data') {
         this.emit(type, this.processLine(d))
     }
+
+    [_onError] = line =>
+        this.log(line.toString('utf8').trim(), 'error')
 
     processLine(d) {
         return d
