@@ -64,18 +64,21 @@ export default class extends EventEmitter {
 }
 
 // Cleanup handling (in case UI is used, it'll be caught there)
-const exit = async err => {
-    err && Number.isNaN(err) && console.log(err)
-    process.stdin.resume()
+const exit = async (err, isErr = false) => {
+    err && isNaN(err) && console.log(err);
+    process.stdin.resume();
 
     for (const proc of instances) {
         await proc.clean()
     }
 
     if (process.MHY_ENV === 'cli') {
-        if (!Number.isNaN(err)) {
+        if (!isNaN(err)) {
             process.exit(err)
         } else {
+            if (isErr) {
+                process.exit(1)
+            }
             process.exit(0)
         }
     }
@@ -94,7 +97,7 @@ const signUpForExit = p => {
     p.on('SIGUSR2', exit)
 
     //catches uncaught exceptions
-    p.on('uncaughtException', exit)
+    p.on('uncaughtException', e => exit(e, true))
 }
 
 signUpForExit(process)
