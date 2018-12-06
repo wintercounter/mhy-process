@@ -3,6 +3,7 @@ import { spawn } from 'child_process'
 import tk from 'tree-kill'
 
 const _onData = Symbol()
+const _onError = Symbol()
 const instances = new Set()
 
 export default class extends EventEmitter {
@@ -17,18 +18,21 @@ export default class extends EventEmitter {
 		const p = spawn(bin, cmd, { shell: true, stdio: process.MHY_ENV === 'ui' ? 'pipe' : 'inherit' })
 		this.processes.set(id, p)
 		p.stdout && p.stdout.on('data', this[_onData])
-		p.stderr && p.stderr.on('data', this[_onData])
+		p.stderr && p.stderr.on('error', this[_onError])
 		if (process.MHY_ENV === 'cli') {
 			p.on && p.on('data', this[ _onData ])
+			p.on && p.on('error', this[ _onError ])
 			p.on && signUpForExit(p)
 		}
 		return p
 	}
 
-	[_onData] = line => this.log(line.toString('utf8').trim())
+    [_onData] = line => this.log(line.toString('utf8').trim())
 
-	log(d) {
-		this.emit('data', this.processLine(d))
+     [_onError] = line => this.log(line.toString('utf8').trim(), 'error')
+
+	log(d, type = 'data') {
+		this.emit(type, this.processLine(d))
 	}
 
 	processLine(d) {
